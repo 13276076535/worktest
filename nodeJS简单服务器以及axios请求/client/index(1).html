@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+  <!-- 导入样式表 -->
+  <link rel="stylesheet" href="./assets/news.css" />
+  <script src="./lib/jquery-3.6.0.min.js"></script>
+  <script src="./lib/axios.js"></script>
+  <script src="./lib/template-web.js"></script>
+</head>
+
+<body>
+
+  <!-- 新闻列表 -->
+  <div id="news-list">
+
+  </div>
+
+  <!-- 
+    目标:
+      1. 获取数据
+         通过 ajax 发送请求 get
+         请求地址: http://localhost:3000/api/news
+      2. 渲染页面
+  -->
+  <script type="text/html" id="tep">
+    {{each data}}
+ <!-- 新闻的 item 项 -->
+  <div class="news-item">
+    <img class="thumb" src="../server/data/{{$value.img}}" alt="" />
+    <div class="right-box">
+      <!-- 新闻标题 -->
+      <h1 class="title">{{$value.title}}</h1>
+      <div class="footer">
+        <div>
+          <!-- 新闻来源 -->
+          <span>{{$value.source}}</span>&nbsp;&nbsp;
+          <!-- 发布日期 -->
+          <span>{{$value.time}}</span>
+        </div>
+        <!-- 评论数量 -->
+        <span>评论数：{{$value.cmtcount}}</span>
+      </div>
+    </div>
+  </div>
+  {{/each}}
+  </script>
+  <script>
+    //jQuery方法
+    // $.ajax({
+    //   method: 'GET',
+    //   url: 'http://localhost:3000/api/news',
+    //   // dataType:'jsonp',
+    //   success: function (res) {
+    //     if (res.code !== 200) return
+    //     const data = template('tep', res)
+    //     $('#news-list').html(data)
+    //   }
+    // })
+
+    //axios
+    axios({
+      method:'GET',
+      url:'http://localhost:3000/api/news',
+    }).then(function (response) {
+      console.log(response);
+      const res = response.data
+      if (res.code !==200) return 
+      const data = template('tep',res)
+      document.querySelector('#news-list').innerHTML = data
+    })
+  </script>
+</body>
+
+</html>
